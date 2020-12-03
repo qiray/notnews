@@ -2,3 +2,5 @@ __pycache__
 rawdata
 *.zip
 *.txt
+*.db
+*.db-journal
