@@ -8,6 +8,8 @@ import sys
 import shutil
 import zipfile
 
+from markov import get_sentences
+
 # sys.path.append('MarkovTextGenerator')
 
 OUTFILE = "data.txt"
@@ -57,6 +59,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # get_sentences()
     # markov.main()
 
 
