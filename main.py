@@ -1,16 +1,23 @@
 #!/bin/python3
 
 import datetime
+import language_check
 import network
 import os
+import sys
 import shutil
 import zipfile
+
+# sys.path.append('MarkovTextGenerator')
 
 OUTFILE = "data.txt"
 
 # TODOlist:
 # TODO:
 # use MarkovTextGenerator to parse text to database (USE -n 1 only)
+# Use https://github.com/veekaybee/markovhn.git or https://gist.github.com/grantslatton/7694811
+# Find and fix typos (https://github.com/intgr/topy), punctuation errors and grammatical errors (https://pypi.org/project/grammar-check/). Maybe not needed.
+# Fix quotes errors
 # generate great news
 # post it every hour
 # clear old data and repeat on a new day
@@ -46,5 +53,15 @@ def main():
         zip_ref.extractall(dirname)
     parse_files(dirname + "/day")
 
+# import MarkovTextGenerator.main as markov
+
 if __name__ == '__main__':
     main()
+    # markov.main()
+
+
+# tool = language_check.LanguageTool('ru-RU')
+# text = u'Русский текст с апечаткой'
+# matches = tool.check(text)
+# len(matches)
+# print (language_check.correct(text, matches))
