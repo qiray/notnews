@@ -16,6 +16,7 @@ OUTFILE = "data.txt"
 
 # TODOlist:
 # TODO:
+# https://github.com/minimaxir/textgenrnn
 # use MarkovTextGenerator to parse text to database (USE -n 1 only)
 # Use https://github.com/veekaybee/markovhn.git or https://gist.github.com/grantslatton/7694811
 # Find and fix typos (https://github.com/intgr/topy), punctuation errors and grammatical errors (https://pypi.org/project/grammar-check/). Maybe not needed.
