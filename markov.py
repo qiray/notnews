@@ -21,7 +21,7 @@ def init(filename):
                 markov_map[' '.join(title[max(0,i-lookback):i])][' '.join(title[i:i+1])] += 1
 
     #Convert map to the word1 -> word2 -> probability of word2 after word1
-    for word, following in markov_map.items():
+    for _, following in markov_map.items():
         total = float(sum(following.values()))
         for key in following:
             following[key] /= total
