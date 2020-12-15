@@ -8,7 +8,7 @@ from random import random
 lookback = 2
 
 def init(filename):
-    archive = open(filename)
+    archive = open(filename, encoding="utf-8")
     titles = archive.read().split("\n")
     archive.close()
     markov_map = defaultdict(lambda: defaultdict(int))
@@ -37,8 +37,8 @@ def sample(items):
             next_word = k
     return next_word
 
-def get_sentences():
-    markov_map, titles = init("data.txt")
+def get_sentences(filename):
+    markov_map, titles = init(filename)
     sentences = []
     count = 10
     while len(sentences) < count:
