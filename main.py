@@ -23,6 +23,7 @@ OUTFILE = "data.txt"
 # generate great news
 # post it every hour
 # clear old data and repeat on a new day
+# copyrights
 
 def unique(filename):
     uniqlines = set(open(filename, encoding="utf-8").readlines())
@@ -41,16 +42,28 @@ def parse_files(dirname):
     outfile.close()
     unique(OUTFILE)
 
-def main():
-    dirname = "rawdata"
-    # shutil.rmtree(dirname, ignore_errors=True)
-    filename = "news.zip"
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    network.download_file("http://mediametrics.ru/data/archive/day/ru-{}.zip".format(yesterday), filename)
-    with zipfile.ZipFile(filename, 'r') as zip_ref:
-        zip_ref.extractall(dirname)
-    parse_files(dirname + "/day")
+def main(argv):
+    update_data = False
+    generate_sentences = False
+    if len(argv) < 2:
+        print("No params specified. Using default values.")
+        argv.extend(("-u", "-g"))
+    args_dict = { i : True for i in argv }
+    if "-u" in args_dict:
+        update_data = True
+    if "-g" in args_dict:
+        generate_sentences = True
+    if update_data:
+        dirname = "rawdata"
+        shutil.rmtree(dirname, ignore_errors=True)
+        filename = "news.zip"
+        yesterday = datetime.date.today() - datetime.timedelta(days=1)
+        network.download_file("http://mediametrics.ru/data/archive/day/ru-{}.zip".format(yesterday), filename)
+        with zipfile.ZipFile(filename, 'r') as zip_ref:
+            zip_ref.extractall(dirname)
+        parse_files(dirname + "/day")
+    if generate_sentences:
+        get_sentences(OUTFILE)
 
 if __name__ == '__main__':
-    main()
-    get_sentences(OUTFILE)
+    main(sys.argv)
