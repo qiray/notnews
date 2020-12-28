@@ -17,6 +17,7 @@ OUTFILE = "data.txt"
 # TODO:
 # https://github.com/minimaxir/textgenrnn
 # use markov.py to parse text to database (USE -n 1 only)
+# Get data from panorama.pub?
 # Use https://github.com/veekaybee/markovhn.git or https://gist.github.com/grantslatton/7694811
 # Find and fix typos (https://github.com/intgr/topy), punctuation errors and grammatical errors (https://pypi.org/project/grammar-check/). Maybe not needed.
 # Fix quotes errors
@@ -31,13 +32,14 @@ def unique(filename):
 
 def parse_files(dirname):
     files = os.listdir(dirname)
-    outfile = open(OUTFILE, 'w', encoding="utf-8") 
+    outfile = open(OUTFILE, 'w', encoding="utf-8")
+    nonBreakSpace = u'\xa0'
     for filename in files:
         with open(dirname + "/" + filename, encoding="utf-8") as f:
             next(f)
             for line in f:
                 data = line.split("\t")
-                value = data[1].replace("&quot;", "\"")
+                value = data[1].replace("&quot;", "\"").replace(nonBreakSpace, " ")
                 outfile.write(value + "\n")
     outfile.close()
     unique(OUTFILE)
@@ -53,6 +55,12 @@ def main(argv):
         update_data = True
     if "-g" in args_dict:
         generate_sentences = True
+    if "-h" in args_dict:
+        print("Help info") # TODO: print help info
+        return
+    if "-a" in args_dict:
+        print("About info") # TODO: print about info
+        return
     if update_data:
         dirname = "rawdata"
         shutil.rmtree(dirname, ignore_errors=True)
@@ -62,6 +70,7 @@ def main(argv):
         with zipfile.ZipFile(filename, 'r') as zip_ref:
             zip_ref.extractall(dirname)
         parse_files(dirname + "/day")
+    
     if generate_sentences:
         get_sentences(OUTFILE)
 
