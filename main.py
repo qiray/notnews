@@ -9,8 +9,6 @@ import zipfile
 
 from markov import get_sentences
 
-# sys.path.append('MarkovTextGenerator')
-
 OUTFILE = "data.txt"
 
 # TODOlist:
@@ -25,6 +23,7 @@ OUTFILE = "data.txt"
 # post it every hour
 # clear old data and repeat on a new day
 # copyrights
+# new mode: generate one news and wait for user decision: if "+" -> move news to whitelist. Later publish news from whitelist.
 
 def unique(filename):
     uniqlines = set(open(filename, encoding="utf-8").readlines())
@@ -61,6 +60,7 @@ def main(argv):
     if "-a" in args_dict:
         print("About info") # TODO: print about info
         return
+    # TODO: new mode: generate one news and wait for user decision: if "+" -> move news to whitelist. Later publish news from whitelist.
     if update_data:
         dirname = "rawdata"
         shutil.rmtree(dirname, ignore_errors=True)
