@@ -7,6 +7,7 @@ import sys
 import shutil
 import zipfile
 
+from getch import getch
 from markov import get_sentences
 
 OUTFILE = "data.txt"
@@ -60,6 +61,9 @@ def main(argv):
     if "-a" in args_dict:
         print("About info") # TODO: print about info
         return
+    if "-i" in args_dict:
+        user_input = getch()
+        print(user_input)
     # TODO: new mode: generate one news and wait for user decision: if "+" -> move news to whitelist. Later publish news from whitelist.
     if update_data:
         dirname = "rawdata"
