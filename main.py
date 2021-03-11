@@ -8,7 +8,7 @@ import shutil
 import zipfile
 
 from getch import getch
-from markov import get_sentences
+from markov import generate_sentence, get_sentences
 
 OUTFILE = "data.txt"
 

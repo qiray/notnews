@@ -37,23 +37,22 @@ def sample(items):
             next_word = k
     return next_word
 
-def get_sentences(filename):
+def generate_sentence(markov_map, titles):
+    sentence = []
+    next_word = sample(markov_map[''].items())
+    while next_word != '':
+        sentence.append(next_word)
+        next_word = sample(markov_map[' '.join(sentence[-lookback:])].items())
+    sentence = ' '.join(sentence)
+    for title in titles: #Prune titles that are substrings of actual titles
+        if sentence in title:
+            return generate_sentence(markov_map, titles)
+    return sentence
+
+def get_sentences(filename, count=10):
     markov_map, titles = init(filename)
     sentences = []
-    count = 10
     while len(sentences) < count:
-        sentence = []
-        next_word = sample(markov_map[''].items())
-        while next_word != '':
-            sentence.append(next_word)
-            next_word = sample(markov_map[' '.join(sentence[-lookback:])].items())
-        sentence = ' '.join(sentence)
-        flag = True
-        for title in titles: #Prune titles that are substrings of actual titles
-            if sentence in title:
-                flag = False
-                break
-        if flag:
-            sentences.append(sentence)
+        sentences.append(generate_sentence(markov_map, titles))
     for sentence in sentences:
         print (sentence)
