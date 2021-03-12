@@ -1,26 +1,48 @@
 
-# from https://stackoverflow.com/a/21659588/2120823
+# from https://stackoverflow.com/a/20865751/2120823
 
-def _find_getch():
-    try:
+class _Getch:
+    """Gets a single character from standard input. Does not echo to the screen."""
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
+
+    def __call__(self): 
+        char = self.impl()
+        if char == '\x03':
+            raise KeyboardInterrupt
+        elif char == '\x04':
+            raise EOFError
+        return char
+
+class _GetchUnix:
+    def __init__(self):
+        import tty
+        import sys
+
+    def __call__(self):
+        import sys
+        import tty
         import termios
-    except ImportError:
-        # Non-POSIX. Return msvcrt's (Windows') getch.
-        import msvcrt
-        return msvcrt.getch
-
-    # POSIX system. Create and return a getch that manipulates the tty.
-    import sys, tty
-    def _getch():
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
-            tty.setraw(fd)
+            tty.setraw(sys.stdin.fileno())
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
-    return _getch
 
-getch = _find_getch()
+class _GetchWindows:
+    def __init__(self):
+        import msvcrt
+
+    def __call__(self):
+        import msvcrt
+        return msvcrt.getch()
+
+
+getch = _Getch()

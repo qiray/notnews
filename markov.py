@@ -7,6 +7,31 @@ from random import random
 
 lookback = 2
 
+class Markov():
+
+    def __init__(self, filename):
+        self.filename = filename
+        self.markov_map, self.titles = init(filename)
+
+    def generate_sentence(self):
+        sentence = []
+        next_word = sample(self.markov_map[''].items())
+        while next_word != '':
+            sentence.append(next_word)
+            next_word = sample(self.markov_map[' '.join(sentence[-lookback:])].items())
+        sentence = ' '.join(sentence)
+        for title in self.titles: #Prune titles that are substrings of actual titles
+            if sentence in title:
+                return self.generate_sentence()
+        return sentence
+
+    def get_sentences(self, count=10):
+        sentences = []
+        while len(sentences) < count:
+            sentences.append(self.generate_sentence())
+        for sentence in sentences:
+            print (sentence)
+
 def init(filename):
     archive = open(filename, encoding="utf-8")
     titles = archive.read().split("\n")
@@ -36,23 +61,3 @@ def sample(items):
         if t and random() < v/t:
             next_word = k
     return next_word
-
-def generate_sentence(markov_map, titles):
-    sentence = []
-    next_word = sample(markov_map[''].items())
-    while next_word != '':
-        sentence.append(next_word)
-        next_word = sample(markov_map[' '.join(sentence[-lookback:])].items())
-    sentence = ' '.join(sentence)
-    for title in titles: #Prune titles that are substrings of actual titles
-        if sentence in title:
-            return generate_sentence(markov_map, titles)
-    return sentence
-
-def get_sentences(filename, count=10):
-    markov_map, titles = init(filename)
-    sentences = []
-    while len(sentences) < count:
-        sentences.append(generate_sentence(markov_map, titles))
-    for sentence in sentences:
-        print (sentence)

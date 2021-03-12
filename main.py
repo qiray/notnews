@@ -8,9 +8,10 @@ import shutil
 import zipfile
 
 from getch import getch
-from markov import generate_sentence, get_sentences
+from markov import Markov
 
 OUTFILE = "data.txt"
+GOODFILE = "good.txt"
 
 # TODOlist:
 # TODO:
@@ -47,6 +48,7 @@ def parse_files(dirname):
 def main(argv):
     update_data = False
     generate_sentences = False
+    interactive_mode = False
     if len(argv) < 2:
         print("No params specified. Using default values.")
         argv.extend(("-u", "-g"))
@@ -62,9 +64,7 @@ def main(argv):
         print("About info") # TODO: print about info
         return
     if "-i" in args_dict:
-        user_input = getch()
-        print(user_input)
-    # TODO: new mode: generate one news and wait for user decision: if "+" -> move news to whitelist. Later publish news from whitelist.
+        interactive_mode = True
     if update_data:
         dirname = "rawdata"
         shutil.rmtree(dirname, ignore_errors=True)
@@ -76,7 +76,22 @@ def main(argv):
         parse_files(dirname + "/day")
     
     if generate_sentences:
-        get_sentences(OUTFILE)
+        markov = Markov(OUTFILE)
+        markov.get_sentences()
+    
+    if interactive_mode:
+        markov = Markov(OUTFILE)
+        outfile = open(GOODFILE, 'a', encoding="utf-8") # TODO: post these news
+        while True:
+            sentence = markov.generate_sentence()
+            print(sentence)
+            user_input = getch()
+            if user_input == "-":
+                break
+            elif user_input == "+":
+                outfile.write(sentence + "\n")
+                pass
+        outfile.close()
 
 if __name__ == '__main__':
     main(sys.argv)
