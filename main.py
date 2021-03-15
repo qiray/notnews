@@ -16,16 +16,13 @@ GOODFILE = "good.txt"
 # TODOlist:
 # TODO:
 # https://github.com/minimaxir/textgenrnn
-# use markov.py to parse text to database (USE -n 1 only)
 # Get data from panorama.pub?
-# Use https://github.com/veekaybee/markovhn.git or https://gist.github.com/grantslatton/7694811
 # Find and fix typos (https://github.com/intgr/topy), punctuation errors and grammatical errors (https://pypi.org/project/grammar-check/). Maybe not needed.
 # Fix quotes errors
 # generate great news
 # post it every hour
 # clear old data and repeat on a new day
 # copyrights
-# new mode: generate one news and wait for user decision: if "+" -> move news to whitelist. Later publish news from whitelist.
 
 def unique(filename):
     uniqlines = set(open(filename, encoding="utf-8").readlines())
@@ -86,7 +83,7 @@ def main(argv):
             sentence = markov.generate_sentence()
             print(sentence)
             user_input = getch()
-            if user_input == "-":
+            if user_input == "\x1b":
                 break
             elif user_input == "+":
                 outfile.write(sentence + "\n")
@@ -94,4 +91,9 @@ def main(argv):
         outfile.close()
 
 if __name__ == '__main__':
-    main(sys.argv)
+    try:
+        main(sys.argv)
+    except KeyboardInterrupt:
+        exit()
+    except EOFError:
+        exit()
