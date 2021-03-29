@@ -13,16 +13,18 @@ from markov import Markov
 OUTFILE = "data.txt"
 GOODFILE = "good.txt"
 
+APP_NAME = "NotNews"
+VERSION_MAJOR = 0
+VERSION_MINOR = 0
+VERSION_BUILD = 1
+
 # TODOlist:
 # TODO:
-# https://github.com/minimaxir/textgenrnn
 # Get data from panorama.pub?
-# Find and fix typos (https://github.com/intgr/topy), punctuation errors and grammatical errors (https://pypi.org/project/grammar-check/). Maybe not needed.
-# Fix quotes errors
 # generate great news
-# post it every hour
+# post it every hour (twitter, telegram, vk)
 # clear old data and repeat on a new day
-# copyrights
+# add copyrights
 
 def unique(filename):
     uniqlines = set(open(filename, encoding="utf-8").readlines())
@@ -42,6 +44,14 @@ def parse_files(dirname):
     outfile.close()
     unique(OUTFILE)
 
+def get_version():
+    return "%d.%d.%d" % (VERSION_MAJOR, VERSION_MINOR, VERSION_BUILD)
+
+def get_about_info():
+    return ("\n" + APP_NAME + " " + get_version() + " Copyright (C) 2020-2021 Yaroslav Zotov.\n" +
+        "This program comes with ABSOLUTELY NO WARRANTY.\n" +
+        "This is free software under MIT license; see the LICENSE file for copying conditions.\n")
+
 def main(argv):
     update_data = False
     generate_sentences = False
@@ -58,7 +68,7 @@ def main(argv):
         print("Help info") # TODO: print help info
         return
     if "-a" in args_dict:
-        print("About info") # TODO: print about info
+        print(get_about_info())
         return
     if "-i" in args_dict:
         interactive_mode = True
