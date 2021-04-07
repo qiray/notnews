@@ -49,8 +49,12 @@ def get_version():
 
 def get_about_info():
     return ("\n" + APP_NAME + " " + get_version() + " Copyright (C) 2020-2021 Yaroslav Zotov.\n" +
+        "All news data from https://mediametrics.ru/\n" + 
         "This program comes with ABSOLUTELY NO WARRANTY.\n" +
         "This is free software under MIT license; see the LICENSE file for copying conditions.\n")
+
+def get_help_info(): #  TODO: help info
+    return ("\n" + APP_NAME + " " + get_version() + " Copyright (C) 2020-2021 Yaroslav Zotov.\n")
 
 def main(argv):
     update_data = False
@@ -65,7 +69,7 @@ def main(argv):
     if "-g" in args_dict:
         generate_sentences = True
     if "-h" in args_dict:
-        print("Help info") # TODO: print help info
+        print(get_help_info()) 
         return
     if "-a" in args_dict:
         print(get_about_info())
@@ -77,7 +81,7 @@ def main(argv):
         shutil.rmtree(dirname, ignore_errors=True)
         filename = "news.zip"
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
-        network.download_file("http://mediametrics.ru/data/archive/day/ru-{}.zip".format(yesterday), filename)
+        network.download_file(network.URL.format(yesterday), filename)
         with zipfile.ZipFile(filename, 'r') as zip_ref:
             zip_ref.extractall(dirname)
         parse_files(dirname + "/day")
